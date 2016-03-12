@@ -2,19 +2,22 @@ import numpy as np
 import scipy.io
 import ipdb
 
-af = scipy.io.loadmat("dir_tune.mat")
-direc = af["direction"]
-spike_t = af["spikeTimes"]
-zero_deg = spike_t[direc == 0]
+af = scipy.io.loadmat("c1p8.mat")
+stim = af["stim"]
+rho = af["rho"]
 
-dirs = np.unique(direc)
-d_spikes = [[] for _ in range(dirs.shape[0])] 
+win = 40
+spikes = np.where(rho == 1)[0]
+spikes = spikes[spikes >= 40]
+inputs = np.zeros((spikes.shape[0], win))
 
-for d_i, d_val in enumerate(list(dirs)):
-    # get the spikes for each trial
-    tmp_spikes = spike_t[direc == 0]
-    
-    # filter spikes to only take into account 50 to 250ms
-    filt_spikes = []
-    for t_s in range(tmp_spikes.shape[0]):
-        ipdb.set_trace()
+# iterate through the spiking data
+for s_i in xrange(spikes.shape[0]):
+    s_t = spikes[s_i]
+    inputs[s_i] = stim[s_t-win:s_t].reshape((40,))
+
+# average it and plot it    
+in_avg = np.average(inputs, axis=0)
+ipdb.set_trace()
+plt.plot(in_avg)
+plt.show()
