@@ -21,8 +21,8 @@ class SpikingLif(object):
         self.spk_pot = -0.055
         
         self.adapt_cond = 0.0
-        self.t_adapt = 0.1
-        self.adapt_inc = 1e-9
+        self.t_adapt = 1
+        self.adapt_inc = 1e-8
 
         # for debugging
         self.spk_count = 0
@@ -30,7 +30,7 @@ class SpikingLif(object):
     def spike(self, current):
         if(self.refac == False):
             dV = (
-                    1/(self.resist*self.cap) * (self.leak_pot + current/self.resist*self.membrane_area - self.potential) +
+                    1/(self.resist*self.cap) * (self.leak_pot + self.resist*current/self.membrane_area - self.potential) +
                     (self.adapt_cond/self.cap) * (self.k_pot - self.potential)
             )*self.dt
             self.potential += dV
